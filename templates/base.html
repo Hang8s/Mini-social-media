@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}my site{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- optional for fast testing -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
+
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-blue-600">my site</a>
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center py-4 text-sm text-gray-500">
+        © {% now "Y" %} my site
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
