@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">latest posts</h1>
+
+    {% if posts %}
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {% for post in posts %}
+                <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden border border-gray-100">
+                    <a href="{% url 'post_detail' post.id %}">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                        {% else %}
+                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                                no image
+                            </div>
+                        {% endif %}
+                    </a>
+
+                    <div class="p-5 space-y-2">
+                        <a href="{% url 'post_detail' post.id %}">
+                            <h2 class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition">{{ post.title }}</h2>
+                        </a>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            {{ post.body|truncatewords:20 }}
+                        </p>
+                        <div class="text-xs text-gray-400 mt-2">
+                            posted on {{ post.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-gray-500 text-lg mt-10">no posts yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
