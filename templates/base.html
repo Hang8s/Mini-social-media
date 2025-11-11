@@ -7,24 +7,35 @@
     <title>{% block title %}my site{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <!-- optional for fast testing -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     {% block head %}{% endblock %}
 </head>
 <body class="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
 
+    <!-- navbar -->
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-blue-600">my site</a>
+            <a href="/" class="text-2xl font-bold text-blue-600">my site</a>
+
+            <nav class="flex gap-3">
+                <a href="{% url 'create_post' %}"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                    create post
+                </a>
+                <a href="{% url 'logout' %}"
+                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition">
+                    logout
+                </a>
+            </nav>
         </div>
     </header>
 
-    <main class="flex-1 flex items-center justify-center px-4">
+    <main class="flex-1 container mx-auto px-4 py-10">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="text-center py-4 text-sm text-gray-500">
+    <footer class="text-center py-6 text-sm text-gray-500 border-t border-gray-200">
         © {% now "Y" %} my site
     </footer>
 
