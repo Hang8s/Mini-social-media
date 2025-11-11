@@ -1,8 +1,13 @@
 from django import forms
-from .models import Post
+from .models import Post , Coments
 
 
 class post_creation_form(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title','body','image']
+        
+class comment_form(forms.ModelForm):
+    class Meta:
+        model = Coments
+        fields = ['body']

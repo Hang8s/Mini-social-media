@@ -16,3 +16,9 @@ class Post(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
     
+class Coments(models.Model):
+    post = models.ForeignKey(Post,related_name='comments', on_delete=models.SET_NULL,null=True)
+    author = models.ForeignKey(User,on_delete=models.SET_NULL,related_name='comments',null=True)
+    body = models.CharField(max_length=256)
+    time_created = models.DateTimeField(auto_now_add=True)
+

@@ -11,9 +11,25 @@ def home_view(request):
     return render(request, 'posts/home.html', {'posts': posts})
 
 @login_required
-
-def detail_view(request):
-    pass
+def detail_view(request,pk):
+    post = get_object_or_404(Post,pk=pk)
+    form = comment_form()
+    
+    if request.method == 'POST':
+        form = comment_form(request.POST)
+        if form.is_valid():
+            comment =form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+            
+    data = {
+        'post':post,
+        'form':form,
+        'comments':post.comments.all()
+    }
+    return render(request,'posts/post_detail.html',data)
 
 @login_required
 def create_post(request):
@@ -27,6 +43,7 @@ def create_post(request):
             return redirect('home')
     return render(request,'posts/create_post.html',{'form':form})
 
+@login_required
 def delete_post(request,pk):
     post = get_object_or_404(Post,pk=pk)
     
@@ -37,4 +54,5 @@ def delete_post(request,pk):
             
         return render(request,'posts/delete_post.html')
     
+
     

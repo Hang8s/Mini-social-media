@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-80 object-cover">
+    {% endif %}
+
+    <div class="p-6 space-y-4">
+        <h1 class="text-3xl font-bold text-gray-800">{{ post.title }}</h1>
+        <p class="text-gray-600 text-sm">posted on {{ post.time_created|date:"M d, Y" }} by {{ post.author.username }}</p>
+
+        <p class="text-gray-700 leading-relaxed">{{ post.description }}</p>
+
+        {% if user == post.author %}
+            <div class="flex justify-end pt-4">
+                <a href="{% url 'delete_post' post.id %}"
+                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition">
+                    delete
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- comments section -->
+<div class="max-w-3xl mx-auto mt-10 space-y-6">
+    <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">comments</h2>
+
+    {% if comments %}
+        <div class="space-y-4">
+            {% for comment in comments %}
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-800">{{ comment.author.username }}</span>
+                        <span class="text-xs text-gray-400">{{ comment.time_created|date:"M d, Y H:i" }}</span>
+                    </div>
+                    <p class="text-gray-700">{{ comment.body }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-500">no comments yet. be the first to comment!</p>
+    {% endif %}
+
+    <!-- comment form -->
+    {% if user.is_authenticated %}
+        <form method="post" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
+            {% csrf_token %}
+            <h3 class="text-lg font-semibold text-gray-800">add a comment</h3>
+
+            {% for field in form %}
+                <div>
+                    <!-- <label class="block text-gray-700 text-sm mb-1">{{ field.label }}</label> -->
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-sm text-red-500">{{ field.errors }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                post comment
+            </button>
+        </form>
+    {% else %}
+        <p class="text-gray-600 text-sm">
+            you must <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in</a> to leave a comment.
+        </p>
+    {% endif %}
+</div>
+{% endblock %}
