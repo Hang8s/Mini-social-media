@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}delete post{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center w-full min-h-[70vh]">
+    <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100 text-center space-y-6">
+        <h1 class="text-2xl font-bold text-gray-800">delete post</h1>
+        <p class="text-gray-600">are you sure you want to delete <span class="font-semibold text-gray-800">"{{ post.title }}"</span>?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="flex justify-center gap-4">
+                <button type="submit"
+                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition">
+                    yes, delete
+                </button>
+                <a href="/" 
+                    class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition">
+                    cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -8,8 +8,15 @@
     {% if posts %}
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {% for post in posts %}
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden border border-gray-100">
-                    <a href="{% url 'post_detail' post.id %}">
+                <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden border border-gray-100 relative">
+                    {% if user == post.author %}
+                        <a href="{% url 'delete_post' post.id %}" 
+                            class="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md transition">
+                            delete
+                        </a>
+                    {% endif %}
+
+                    <a href="#">
                         {% if post.image %}
                             <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
                         {% else %}
@@ -20,11 +27,11 @@
                     </a>
 
                     <div class="p-5 space-y-2">
-                        <a href="{% url 'post_detail' post.id %}">
+                        <a href="#">
                             <h2 class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition">{{ post.title }}</h2>
                         </a>
                         <p class="text-gray-600 text-sm leading-relaxed">
-                            {{ post.body|truncatewords:20 }}
+                            {{ post.description|truncatewords:20 }}
                         </p>
                         <div class="text-xs text-gray-400 mt-2">
                             posted on {{ post.created_at|date:"M d, Y" }}
