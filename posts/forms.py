@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post , Coments
+from .models import Post , Comments
 
 
 class post_creation_form(forms.ModelForm):
@@ -9,5 +9,5 @@ class post_creation_form(forms.ModelForm):
         
 class comment_form(forms.ModelForm):
     class Meta:
-        model = Coments
+        model = Comments
         fields = ['body']

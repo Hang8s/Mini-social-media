@@ -8,9 +8,10 @@
                     <span class="text-xs text-gray-400">{{ comment.time_created|date:"M d, Y H:i" }}</span>
                 </div>
                 <p class="text-gray-700">{{ comment.body }}</p>
+                {% include 'snippets/comments_likes.html' with comment=comment %}
 
                 {% if user == comment.author %}
-                    <form hx- ="{% url 'delete_comment' comment.id %}"
+                    <form hx-post ="{% url 'delete_comment' comment.id %}"
                         hx-target="closest .comments"
                         class="absolute top-3 right-3">
                         {% csrf_token %}

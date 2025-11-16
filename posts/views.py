@@ -55,7 +55,18 @@ def like_post(request,pk):
         post.likes.add(request.user)
         
     return render(request,'snippets/likes.html',{'post':post})
+
+
+@login_required
+def like_comment(request,pk):
+    comment = get_object_or_404(Comments,pk=pk)
+    
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+    else:
+        comment.likes.add(request.user)
         
+    return render(request,'snippets/comments_likes.html',{'comment':comment})   
     
 @login_required
 def comments_view(request, pk):
@@ -74,9 +85,10 @@ def comments_view(request, pk):
                 "snippets/comments.html",
                 {"comments": post.comments.all()}
                 )
-            
+
+@login_required 
 def delete_comment(request,pk):
-    comment = get_object_or_404(Coments,pk=pk)
+    comment = get_object_or_404(Comments,pk=pk)
     post = get_object_or_404(Post, pk=comment.post.id)
 
     if comment.author == request.user:
