@@ -22,26 +22,6 @@ def detail_view(request,pk):
     }
     return render(request,'posts/post_detail.html',data)
 
-    
-@login_required
-def comments_view(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-
-    if request.method == "POST":
-        form = comment_form(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-
-            return render(
-                request,
-                "snippets/comments.html",
-                {"comments": post.comments.all()}
-                )
-    
-
 @login_required
 def create_post(request):
     form = post_creation_form()
@@ -77,7 +57,33 @@ def like_post(request,pk):
     return render(request,'snippets/likes.html',{'post':post})
         
     
-    
+@login_required
+def comments_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
 
+    if request.method == "POST":
+        form = comment_form(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
 
-    
+            return render(
+                request,
+                "snippets/comments.html",
+                {"comments": post.comments.all()}
+                )
+            
+def delete_comment(request,pk):
+    comment = get_object_or_404(Coments,pk=pk)
+    post = get_object_or_404(Post, pk=comment.post.id)
+
+    if comment.author == request.user:
+        comment.delete()
+        
+    return render(
+            request,
+            "snippets/comments.html",
+            {"comments": post.comments.all()}
+            )

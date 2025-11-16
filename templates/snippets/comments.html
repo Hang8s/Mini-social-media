@@ -1,13 +1,25 @@
-<div id="comments">
+<div class="comments">
 {% if comments %}
     <div class="space-y-4">
         {% for comment in comments %}
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative">
                 <div class="flex justify-between items-center mb-2">
                     <span class="font-semibold text-gray-800">{{ comment.author.username }}</span>
                     <span class="text-xs text-gray-400">{{ comment.time_created|date:"M d, Y H:i" }}</span>
                 </div>
                 <p class="text-gray-700">{{ comment.body }}</p>
+
+                {% if user == comment.author %}
+                    <form hx- ="{% url 'delete_comment' comment.id %}"
+                        hx-target="closest .comments"
+                        class="absolute top-3 right-3">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 text-white text-xs px-2 pt-1 mt-12 rounded-md transition">
+                            delete
+                        </button>
+                    </form>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
