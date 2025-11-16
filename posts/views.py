@@ -64,7 +64,18 @@ def delete_post(request,pk):
             return redirect('home')
             
         return render(request,'posts/delete_post.html')
+
+@login_required
+def like_post(request,pk):
+    post = get_object_or_404(Post,pk=pk)
     
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+        
+    return render(request,'snippets/likes.html',{'post':post})
+        
     
     
 
