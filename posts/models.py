@@ -13,6 +13,7 @@ class Post(models.Model):
     title = models.CharField(max_length=20)
     body = models.TextField(max_length=2000,blank=True,null=True)
     image = models.ImageField(upload_to=image_upload_path, blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
     

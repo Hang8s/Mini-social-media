@@ -22,6 +22,26 @@
                 </a>
             </div>
         {% endif %}
+
+            <div class="flex items-center gap-4 pt-2">
+            {% if user.is_authenticated %}
+                <form method="post" action="/">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="flex items-center gap-1 text-sm font-medium {% if is_liked %}text-blue-600{% else %}text-gray-500 hover:text-blue-600{% endif %}">
+                        {% if is_liked %}
+                            ❤️ liked
+                        {% else %}
+                            🤍 like
+                        {% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-gray-500 text-sm">log in to like posts</p>
+            {% endif %}
+            <span class="text-gray-600 text-sm">{{ post.likes.count }} likes</span>
+            </div>
+
     </div>
 </div>
 
@@ -29,25 +49,10 @@
 <div class="max-w-3xl mx-auto mt-10 space-y-6">
     <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">comments</h2>
 
-    {% if comments %}
-        <div class="space-y-4">
-            {% for comment in comments %}
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-gray-800">{{ comment.author.username }}</span>
-                        <span class="text-xs text-gray-400">{{ comment.time_created|date:"M d, Y H:i" }}</span>
-                    </div>
-                    <p class="text-gray-700">{{ comment.body }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="text-gray-500">no comments yet. be the first to comment!</p>
-    {% endif %}
 
     <!-- comment form -->
-    {% if user.is_authenticated %}
-        <form method="post" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
+    {% if user.is_authenticated %} 
+        <form hx-post="{% url 'comments' post.id %}" hx-target="#comments" hx-on="htmx:afterRequest: this.reset()" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
             {% csrf_token %}
             <h3 class="text-lg font-semibold text-gray-800">add a comment</h3>
 
@@ -71,5 +76,10 @@
             you must <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in</a> to leave a comment.
         </p>
     {% endif %}
+    
+    <div id="comments">
+        {% include "snippets/comments.html" with comments=comments %}
+    </div>
+
 </div>
 {% endblock %}

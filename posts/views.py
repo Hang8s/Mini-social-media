@@ -15,21 +15,32 @@ def detail_view(request,pk):
     post = get_object_or_404(Post,pk=pk)
     form = comment_form()
     
-    if request.method == 'POST':
-        form = comment_form(request.POST)
-        if form.is_valid():
-            comment =form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('post_detail', pk=post.pk)
-            
     data = {
         'post':post,
         'form':form,
         'comments':post.comments.all()
     }
     return render(request,'posts/post_detail.html',data)
+
+    
+@login_required
+def comments_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == "POST":
+        form = comment_form(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+
+            return render(
+                request,
+                "snippets/comments.html",
+                {"comments": post.comments.all()}
+                )
+    
 
 @login_required
 def create_post(request):
@@ -54,5 +65,8 @@ def delete_post(request,pk):
             
         return render(request,'posts/delete_post.html')
     
+    
+    
+
 
     
