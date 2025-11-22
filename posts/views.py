@@ -5,10 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
 # Create your views here.\
-@login_required
 def home_view(request):
     posts = Post.objects.all()
-    return render(request, 'posts/home.html', {'posts': posts})
+    user = request.user
+    data =  {
+        'posts': posts,
+        'user':user
+        }
+    return render(request, 'posts/home.html',data)
 
 @login_required
 def detail_view(request,pk):

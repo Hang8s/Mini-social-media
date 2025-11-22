@@ -1,6 +1,8 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect , get_object_or_404
 from .forms import *
 from django.contrib.auth import authenticate , login , logout
+from .models import Profile
+from posts.models import Post, Comments
 
 # Create your views here.
 def register(request):
@@ -12,6 +14,7 @@ def register(request):
             username = request.POST['username']
             password = request.POST['password1']
             user = authenticate(username=username, password=password)
+            Profile.objects.create(user=user)
             login(request,user)
             
             return redirect('home')
@@ -36,4 +39,35 @@ def user_login(request):
     
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('users:login')
+
+def profile(request,pk):
+    profile = get_object_or_404(Profile,pk=pk)
+    posts = Post.objects.filter(author = profile.user)
+    
+    total_likes = request.user.liked_posts.count()
+    total_ccomments = request.user.comments.count()
+    
+    content_type = request.GET.get('type')
+    
+    
+    data = {
+        'profile':profile,
+        'posts':posts,
+        'total_likes':total_likes,
+        'total_comments':total_ccomments,
+    }
+    
+    if content_type == 'posts':
+        return render(request, 'snippets/posts.html', data)
+    elif content_type == 'likes':
+        data['posts'] = Post.objects.filter(likes = request.user)
+        return render(request, 'snippets/posts.html', data)
+    elif content_type == 'comments':
+        data['comments'] = Comments.objects.filter(author=profile.user)
+        return render(request, 'snippets/comments.html', data)
+        
+    
+
+ 
+    return render(request,'users/profile.html',data)

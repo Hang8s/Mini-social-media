@@ -1,0 +1,8 @@
+
+<div id="user-posts" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {% for post in posts %}
+        {% include 'includes/post.html' %}
+    {% empty %}
+        <p class="text-gray-500 col-span-3 text-center">no posts yet.</p>
+    {% endfor %}
+</div>
