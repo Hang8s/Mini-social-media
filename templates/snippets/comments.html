@@ -4,7 +4,26 @@
         {% for comment in comments %}
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold text-gray-800">{{ comment.author.username }}</span>
+                    <!-- author (move this block ABOVE the title) -->
+                    <div class="flex items-center gap-2 mb-1">
+                        <a href="{% url 'users:profile' comment.author.profile.id %}" class="flex items-center gap-2">
+                            
+                            {% if comment.author.profile.avatar %}
+                                <img src="{{ comment.author.profile.avatar.url }}"
+                                    class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                            {% else %}
+                                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">
+                                    ?
+                                </div>
+                            {% endif %}
+
+                            <span class="text-gray-700 text-sm font-medium hover:text-blue-600 transition">
+                                {{ comment.author.username }}
+                            </span>
+
+                        </a>
+                    </div>
+                    <!-- end author -->
                     <span class="text-xs text-gray-400">{{ comment.time_created|date:"M d, Y H:i" }}</span>
                 </div>
                 <p class="text-gray-700">{{ comment.body }}</p>

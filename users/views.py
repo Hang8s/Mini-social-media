@@ -43,10 +43,11 @@ def user_logout(request):
 
 def profile(request,pk):
     profile = get_object_or_404(Profile,pk=pk)
-    posts = Post.objects.filter(author = profile.user)
+    user = profile.user
+    posts = Post.objects.filter(author = user)
     
-    total_likes = request.user.liked_posts.count()
-    total_ccomments = request.user.comments.count()
+    total_likes = user.liked_posts.count()
+    total_ccomments = user.comments.count()
     
     content_type = request.GET.get('type')
     
@@ -61,10 +62,10 @@ def profile(request,pk):
     if content_type == 'posts':
         return render(request, 'snippets/posts.html', data)
     elif content_type == 'likes':
-        data['posts'] = Post.objects.filter(likes = request.user)
+        data['posts'] = Post.objects.filter(likes = user)
         return render(request, 'snippets/posts.html', data)
     elif content_type == 'comments':
-        data['comments'] = Comments.objects.filter(author=profile.user)
+        data['comments'] = Comments.objects.filter(author=user)
         return render(request, 'snippets/comments.html', data)
         
     

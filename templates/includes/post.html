@@ -2,7 +2,7 @@
     
     {% if user == post.author %}
         <a href="{% url 'delete_post' post.id %}" 
-            class="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md transition">
+           class="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md transition">
             delete
         </a>
     {% endif %}
@@ -18,9 +18,34 @@
     </a>
 
     <div class="p-5 space-y-2 relative">
+
+        <!-- author (move this block ABOVE the title) -->
+        <div class="flex items-center gap-2 mb-1">
+            <a href="{% url 'users:profile' post.author.profile.id %}" class="flex items-center gap-2">
+                
+                {% if post.author.profile.avatar %}
+                    <img src="{{ post.author.profile.avatar.url }}"
+                        class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                {% else %}
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs">
+                        ?
+                    </div>
+                {% endif %}
+
+                <span class="text-gray-700 text-sm font-medium hover:text-blue-600 transition">
+                    {{ post.author.username }}
+                </span>
+
+            </a>
+        </div>
+        <!-- end author -->
+
         <a href="{% url 'post_detail' post.id %}">
-            <h2 class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition">{{ post.title }}</h2>
+            <h2 class="text-xl font-semibold text-gray-800 hover:text-blue-600 transition">
+                {{ post.title }}
+            </h2>
         </a>
+
         <p class="text-gray-600 text-sm leading-relaxed">
             {{ post.description|truncatewords:20 }}
         </p>
