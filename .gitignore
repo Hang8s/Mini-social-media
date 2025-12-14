@@ -1,7 +1,7 @@
+__pycache__/
 venv/
 media/
-**/__pycache__/
-db.sqlite3
+.env
 
 *.pyc
 *.pyo

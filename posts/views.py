@@ -8,11 +8,17 @@ from django.shortcuts import get_object_or_404
 def home_view(request):
     posts = Post.objects.all()
     user = request.user
+    
     data =  {
         'posts': posts,
         'user':user
         }
     return render(request, 'posts/home.html',data)
+
+
+# def search(request):
+    
+#     queryset = Post.objects.filter(title__icontains=self.request.GET.get('q'))
 
 @login_required
 def detail_view(request,pk):
