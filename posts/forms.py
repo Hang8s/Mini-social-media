@@ -2,7 +2,7 @@ from django import forms
 from .models import Post , Comments
 
 
-class post_creation_form(forms.ModelForm):
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title','body','image']
