@@ -72,3 +72,25 @@ def profile(request,pk):
 
  
     return render(request,'users/profile.html',data)
+
+def edit_profile(request,pk):
+    profile = get_object_or_404(Profile, pk=pk)
+    if request.user != profile.user:
+        return redirect ('home')
+    
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES,instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('users:profile',pk=profile.pk)
+        
+    else:
+        form = ProfileForm(instance=profile)
+        
+        
+    data = {
+        'profile':profile,
+        'form':form
+        }
+        
+    return render(request,'users/edit_profile.html',data)

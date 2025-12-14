@@ -21,7 +21,7 @@
             {% endif %}
 
             {% if user == profile.user %}
-                <a href="#" 
+                <a href="{% url 'users:edit_profile' profile.id %}" 
                     class="mt-2 inline-block px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
                     edit profile
                 </a>

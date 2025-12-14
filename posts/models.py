@@ -16,9 +16,21 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(unique=True,blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Post.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
     
 class Comments(models.Model):
-    post = models.ForeignKey(Post,related_name='comments', on_delete=models.SET_NULL,null=True)
+    post = models.ForeignKey(Post,related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(User,on_delete=models.SET_NULL,related_name='comments',null=True)
     body = models.CharField(max_length=256)
     likes = models.ManyToManyField(User, related_name='liked_comments', blank=True)
