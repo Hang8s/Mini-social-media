@@ -3,22 +3,36 @@ from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 # Create your views here.\
 def home_view(request):
     posts = Post.objects.all()
     user = request.user
     
+    search = request.GET.get('search', '')
+    
+    if search:
+        posts = Post.objects.filter(title__icontains=search)
+        
+    if request.htmx:
+        data =  {
+        'posts': posts,
+        'user':user
+        }
+        return render(request, 'snippets/posts.html',data)
+    
+    
     data =  {
         'posts': posts,
         'user':user
         }
+    
     return render(request, 'posts/home.html',data)
 
 
-# def search(request):
+
     
-#     queryset = Post.objects.filter(title__icontains=self.request.GET.get('q'))
 
 @login_required
 def detail_view(request,pk):
