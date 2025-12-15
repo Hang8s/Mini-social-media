@@ -86,8 +86,8 @@ Open in browser
 
 http://localhost:8000
 🧩 Project Structure
-csharp
-Копіювати код
+
+
 Mini-social-media/
 ├── core/                 # main Django app
 ├── media/                # uploaded media
